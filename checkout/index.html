@@ -467,7 +467,7 @@ Dados do Pagamento
           utm_data: utmData
         };
 
-        const endpoint = 'http://127.0.0.1:8081/checkout/api/checkout.php';
+        const endpoint = '/checkout/api/checkout.php';
         const resp = await fetch(endpoint, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },

@@ -64,7 +64,7 @@ document.addEventListener('DOMContentLoaded', function() {
     attempts++;
     if (!txid) return;
     try {
-      const resp = await fetch('http://127.0.0.1:8081/checkout/api/status.php', {
+      const resp = await fetch('/checkout/api/status.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ txid })
