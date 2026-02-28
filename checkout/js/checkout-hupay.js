@@ -113,7 +113,7 @@ document.addEventListener('DOMContentLoaded', function() {
         utm_data: utmData
       };
 
-      const endpoint = '/checkout/api/checkout.php';
+      const endpoint = '/api/checkout';
       const resp = await fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
