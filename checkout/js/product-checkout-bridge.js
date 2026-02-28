@@ -77,7 +77,7 @@
     localStorage.setItem('checkout_quantidade', '1');
     localStorage.setItem('checkout_total', String(price.toFixed(2)));
 
-    window.location.href = 'http://127.0.0.1:8080/checkout/index.html';
+    window.location.href = '/checkout/index.html';
   }
 
   window.startCheckoutLocal = startCheckout;
