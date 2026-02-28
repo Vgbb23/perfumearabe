@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <script>
+    window.pixelId = "69a251789e92b9320c73eae1";
+    var a = document.createElement("script");
+    a.setAttribute("async", "");
+    a.setAttribute("defer", "");
+    a.setAttribute("src", "https://cdn.utmify.com.br/scripts/pixel/pixel.js");
+    document.head.appendChild(a);
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pagamento via PIX</title>
+  <link rel="stylesheet" href="css/pagamento.css">
+  <script src="js/utm-tracker.js"></script>
+  <script
+    src="https://cdn.utmify.com.br/scripts/utms/latest.js"
+    data-utmify-prevent-xcod-sck
+    data-utmify-prevent-subids
+    async
+    defer
+  ></script>
+</head>
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <button class="back" onclick="history.back()">←</button>
+      <img src="images/logo.png" alt="Logo" class="logo">
+    </div>
+
+    <div class="content">
+      <div class="status">
+        <span class="pil"></span>
+        <span>PIX disponível. Conclua o pagamento no seu banco.</span>
+      </div>
+
+      <h1 class="title">Pagar com PIX - <span id="valor">R$ 0,00</span></h1>
+      <p>Você está adquirindo <b id="quantidade">1</b> unidade(s).</p>
+
+      <div class="steps">
+        <div class="step">
+          <h3>Como pagar (passo a passo)</h3>
+          <p>1) Clique no botão <b>Copiar Código Pix</b>.</p>
+          <p>2) Abra o aplicativo do seu banco e entre em <b>Pix</b>.</p>
+          <p>3) Toque em <b>Pix Copia e Cola</b> e cole o código.</p>
+          <p>4) Confirme o pagamento e aguarde a aprovação automática.</p>
+        </div>
+      </div>
+
+      <div class="qr">
+        <img id="qrcode" alt="QR Code PIX" />
+        <div class="pix-box">
+          <div class="pix-label">Código Pix (resumido)</div>
+          <div id="pixCodeBox" class="pix-code"></div>
+        </div>
+        <button id="btnCopiar" class="copy">📋 Copiar Código Pix</button>
+        <div id="timer" class="timer"></div>
+        <div id="statusLine" class="status-line"><span class="status-dot"></span><span id="statusText">Aguardando pagamento...</span></div>
+      </div>
+
+      <div class="logos">
+        <img src="images/phONnvlEGdyt.png" alt="Meios de pagamento" onerror="this.style.display='none'">
+      </div>
+
+      <div class="legal">
+        Pagamentos processados com segurança. O PIX expira após o tempo indicado. Caso expire, gere novamente.
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast">Código PIX copiado!</div>
+
+  <script src="js/pagamento.js"></script>
+</body>
+</html>

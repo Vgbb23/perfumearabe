@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <script>
+    window.pixelId = "69a251789e92b9320c73eae1";
+    var a = document.createElement("script");
+    a.setAttribute("async", "");
+    a.setAttribute("defer", "");
+    a.setAttribute("src", "https://cdn.utmify.com.br/scripts/pixel/pixel.js");
+    document.head.appendChild(a);
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Confirmação do Pedido</title>
+  <link rel="stylesheet" href="css/checkout.css">
+  <script src="js/utm-tracker.js"></script>
+  <script
+    src="https://cdn.utmify.com.br/scripts/utms/latest.js"
+    data-utmify-prevent-xcod-sck
+    data-utmify-prevent-subids
+    async
+    defer
+  ></script>
+</head>
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <img src="images/logo.png" alt="Logo" class="logo">
+    </div>
+
+    <div class="content confirmacao">
+      <div class="icone">✅</div>
+      <h1>Pedido Registrado com Sucesso!</h1>
+      <p>Obrigado pela sua compra. Em breve enviaremos a confirmação.</p>
+
+      <div class="resumo-pedido" id="resumo"></div>
+
+      <a href="index.html" class="btn-voltar">Voltar ao início</a>
+    </div>
+  </div>
+
+  <script>
+    (function(){
+      const success = JSON.parse(localStorage.getItem('payment_success') || '{}');
+      const cliente = success.cliente || JSON.parse(localStorage.getItem('cliente') || '{}');
+      const qtd = success.qtd || Number(localStorage.getItem('checkout_quantidade') || 1);
+      const total = success.total || Number(localStorage.getItem('checkout_total') || 0);
+
+      const el = document.getElementById('resumo');
+      el.innerHTML = `
+        <h3>Resumo</h3>
+        <p><b>Quantidade:</b> ${qtd}</p>
+        <p><b>Total:</b> R$ ${Number(total).toFixed(2).replace('.', ',')}</p>
+        <div class="divider"></div>
+        <p><b>Nome:</b> ${cliente.nome || '-'}</p>
+        <p><b>CPF:</b> ${cliente.cpf || '-'}</p>
+        <p><b>Email:</b> ${cliente.email || '-'}</p>
+        <p><b>Telefone:</b> ${cliente.telefone || '-'}</p>
+      `;
+    })();
+  </script>
+</body>
+</html>

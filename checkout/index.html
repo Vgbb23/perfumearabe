@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <script>
+    window.pixelId = "69a251789e92b9320c73eae1";
+    var a = document.createElement("script");
+    a.setAttribute("async", "");
+    a.setAttribute("defer", "");
+    a.setAttribute("src", "https://cdn.utmify.com.br/scripts/pixel/pixel.js");
+    document.head.appendChild(a);
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout</title>
+  <script>
+    // Configuração do produto (dados dinâmicos do localStorage)
+    let quantidade = 1;
+    const PRODUTO_NOME = localStorage.getItem('product_name') || "Parafusadeira do gueto vai vir roi";
+    const PRODUTO_IMG = localStorage.getItem('product_image') || "https://m.media-amazon.com/images/I/6137Taup2AL.jpg";
+    const PRODUTO_PRECO = parseFloat(localStorage.getItem('product_price')) || 79.90;
+    const OPCOES_FRETE = [
+      { nome: 'Entrega Padrão', prazo: '5 a 7 dias úteis', valor: 0.00 },
+      { nome: 'Entrega Rápida', prazo: '2 a 3 dias úteis', valor: 13.75 }
+    ];
+    const API_PIX_URL = "checkout/api/checkout.php";
+    const formatBRL = (valor) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(Number(valor) || 0);
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="js/utm-tracker.js"></script>
+  <script
+    src="https://cdn.utmify.com.br/scripts/utms/latest.js"
+    data-utmify-prevent-xcod-sck
+    data-utmify-prevent-subids
+    async
+    defer
+  ></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'anthracite': '#1f1f23',
+            'aqua': '#2dd4bf',
+            'ice': '#f8fafc',
+            'highlight': '#ffd166',
+            'laranja': '#f97316'
+          },
+          fontFamily: {
+            'sans': ['Inter', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-ice font-sans">
+<header class="bg-white shadow-sm border-b" style="background-color: var(--header-bg-color, #1e3a8a)">
+  <div class="max-w-4xl mx-auto px-4 py-4 flex justify-center items-center">
+    <div class="text-xl font-bold text-anthracite">
+      <img src="images/logo.png" alt="Logo" class="h-8">
+    </div>
+  </div>
+</header>
+
+<!-- Alerta Oferta Relâmpago (full width) -->
+<div class="w-full bg-[#2d334a] text-white text-center py-4 font-medium text-sm md:text-base">
+  Finalize <strong>agora</strong> e garanta o <strong>Desconto Especial!</strong>
+</div>
+
+<!-- Espaço entre alerta e etapas -->
+<div class="h-4"></div>
+
+<!-- Etapas com Ícones (ajustado) -->
+<div class="max-w-4xl mx-auto px-4 py-2">
+  <div class="flex items-center justify-between">
+
+    <!-- Etapa 1: Informações -->
+    <div class="flex flex-col items-center flex-1">
+      <div class="flex items-center w-full">
+        <div class="flex-1 h-0.5 bg-[#f97316]"></div>
+        <div class="w-10 h-10 bg-[#f97316] rounded-full flex items-center justify-center mx-2">
+          <img src="images/1.png" alt="info" class="w-5 h-5">
+        </div>
+        <div class="flex-1 h-0.5 bg-[#f97316]"></div>
+      </div>
+      <p class="text-sm font-semibold text-black mt-2 text-center">Dados pessoais</p>
+    </div>
+
+    <!-- Etapa 2: Entrega -->
+    <div class="flex flex-col items-center flex-1">
+      <div class="flex items-center w-full">
+        <div class="flex-1 h-0.5 bg-[#f97316]"></div>
+        <div class="w-10 h-10 bg-[#f97316] rounded-full flex items-center justify-center mx-2">
+          <img src="images/2.png" alt="entrega" class="w-5 h-5">
+        </div>
+        <div class="flex-1 h-0.5 bg-[#f97316]"></div>
+      </div>
+      <p class="text-sm font-semibold text-black mt-2 text-center">Entrega</p>
+    </div>
+
+    <!-- Etapa 3: Pagamento -->
+    <div class="flex flex-col items-center flex-1">
+      <div class="flex items-center w-full">
+        <div class="flex-1 h-0.5 bg-[#f97316]"></div>
+        <div class="w-10 h-10 bg-[#f97316] rounded-full flex items-center justify-center mx-2">
+          <img src="images/3.png" alt="pagamento" class="w-5 h-5">
+        </div>
+        <div class="flex-1 h-0.5 bg-[#f97316]"></div>
+      </div>
+      <p class="text-sm font-semibold text-black mt-2 text-center">Pagamento</p>
+    </div>
+
+  </div>
+</div>
+
+  <main class="max-w-4xl mx-auto px-4 py-8 space-y-8">
+
+    <!-- Produto -->
+    <section class="bg-white p-4 rounded-xl shadow space-y-4">
+      <h2 class="text-lg font-semibold text-anthracite">Seu carrinho</h2>
+      <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+          <img id="productImage" src="" alt="Produto" class="w-14 h-14 rounded border object-contain">
+          <div class="flex flex-col">
+            <h2 id="productName" class="text-sm font-bold text-anthracite leading-snug"></h2>
+            <p class="text-xs text-gray-400">Promoção Relâmpago</p>
+          </div>
+        </div>
+        <div class="flex items-center space-x-2">
+          <button onclick="alterarQuantidade(-1)" class="px-2 py-1 text-red-500 border border-gray-300 rounded">-</button>
+          <span id="quantidadeProduto" class="px-2 text-sm">1</span>
+          <button onclick="alterarQuantidade(1)" class="px-2 py-1 text-green-500 border border-gray-300 rounded">+</button>
+        </div>
+      </div>
+      <hr>
+      <div class="text-sm space-y-1">
+        <div class="flex justify-between">
+          <span>Subtotal</span>
+          <span id="productPrice">R$ 0,00</span>
+        </div>
+        <div class="flex justify-between">
+          <span>Frete</span>
+          <span id="freteValor">R$ 0,00</span>
+        </div>
+        <div class="flex justify-between font-bold text-lg">
+          <span>Total</span>
+          <span id="totalValorResumo">R$ 0,00</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Etapa 1: Dados pessoais -->
+    <section class="bg-white p-6 rounded-xl shadow space-y-4">
+<h2 class="text-xl font-bold text-anthracite flex items-center gap-2">
+<span class="w-7 h-7 flex items-center justify-center rounded-full bg-[#1e3a8a] text-white text-sm font-bold">1</span>
+Dados Pessoais
+</h2>      <input type="text" id="nome" placeholder="Nome completo" class="input">
+      <input type="email" id="email" placeholder="E-mail" class="input">
+      <input type="text" id="cpf" placeholder="CPF" class="input">
+      <input type="text" id="telefone" placeholder="Telefone" class="input">
+    </section>
+
+    <!-- Etapa 2: Endereço -->
+    <section class="bg-white p-6 rounded-xl shadow space-y-4">
+      <h2 class="text-xl font-bold text-anthracite flex items-center gap-2">
+<span class="w-7 h-7 flex items-center justify-center rounded-full bg-[#1e3a8a] text-white text-sm font-bold">2</span>
+Endereço
+</h2>
+      <input type="text" id="cep" placeholder="CEP" class="input" onblur="buscarCEP()">
+      <input type="text" id="rua" placeholder="Rua" class="input">
+      <input type="text" id="numero" placeholder="Número da residência" class="input">
+      <input type="text" id="bairro" placeholder="Bairro" class="input">
+      <input type="text" id="cidade" placeholder="Cidade" class="input">
+      <input type="text" id="estado" placeholder="Estado" class="input">
+      <input type="text" id="complemento" placeholder="Complemento" class="input">
+      <div id="freteContainer" class="space-y-4 hidden">
+        <h3 class="text-md font-semibold text-anthracite mt-4">Escolha o frete</h3>
+        <div id="freteOpcoes" class="grid gap-4 sm:grid-cols-1 md:grid-cols-3"></div>
+      </div>
+    </section>
+
+    <!-- Etapa 3: Pagamento -->
+    <section class="bg-white p-6 rounded-xl shadow space-y-4">
+      <h2 class="text-xl font-bold text-anthracite flex items-center gap-2">
+<span class="w-7 h-7 flex items-center justify-center rounded-full bg-[#1e3a8a] text-white text-sm font-bold">3</span>
+Dados do Pagamento
+</h2>
+      <div class="flex flex-col items-center space-y-3 p-4 border border-aqua/30 rounded-xl bg-aqua/5">
+  <div class="w-24 h-24 bg-white rounded-full shadow flex items-center justify-center">
+    <img src="images/pix.png" alt="PIX logo" class="w-16 h-16">
+  </div>
+  <span class="font-semibold text-aqua text-base">Pagamento via PIX</span>
+</div>
+
+     <div class="bg-green-50 border border-green-200 p-4 rounded-xl space-y-3">
+<div class="p-3 rounded-lg border border-green-300 bg-white/50">
+<p class="font-semibold text-green-700">⚡ IMEDIATO</p>
+<p class="text-sm text-green-700">Ao selecionar a opção Gerar Pix o código para pagamento estará disponível.</p>
+</div>
+<div class="p-3 rounded-lg border border-green-300 bg-white/50">
+<p class="font-semibold text-green-700">📲 PAGAMENTO SIMPLES</p>
+<p class="text-sm text-green-700">Abra seu banco, vá no PIX e escaneie o QRCode.</p>
+</div>
+<div class="p-3 rounded-lg border border-green-300 bg-white/50">
+<p class="font-semibold text-green-700">✅ 100% SEGURO</p>
+<p class="text-sm text-green-700">Desenvolvido pelo Banco Central para facilitar suas compras.</p>
+</div>
+</div>
+      <div class="flex justify-between items-center font-bold text-anthracite">
+  <span>Total:</span>
+  <span id="totalValor">R$ 0,00</span>
+</div>
+      <button onclick="iniciarCheckout()" id="btnFinalizarPagamento" class="w-full bg-laranja text-white py-3 rounded-xl font-bold hover:bg-orange-600">Ir para Checkout</button>
+      <div id="pixContainer" class="mt-4 p-4 border rounded-xl bg-white hidden">
+        <h3 class="text-md font-semibold text-anthracite mb-2">PIX gerado</h3>
+        <div id="pixQRCode" class="flex flex-col items-center gap-3"></div>
+        <div class="flex gap-2 mt-2">
+          <button id="copiarPixBtn" class="px-3 py-2 bg-[#1e3a8a] text-white rounded">Copiar código PIX</button>
+        </div>
+      </div>
+    </section>
+
+
+<!-- Card Reclame Aqui -->
+<section class="bg-white p-4 rounded-xl shadow space-y-3">
+  <div class="flex items-center space-x-3">
+    <img src="images/ra.png" alt="Reclame Aqui" class="w-10 h-10 rounded-full border border-green-600">
+    <h3 class="text-md font-semibold text-green-800">Reclame Aqui</h3>
+  </div>
+  <p class="text-sm text-gray-700">
+    A empresa atingiu a reputação máxima no Reclame Aqui! Sua nota média nos últimos 6 meses é de <strong>9.8/10</strong>.
+  </p>
+  <div class="flex space-x-1">
+    <img src="https://cdn-icons-png.flaticon.com/512/616/616489.png" alt="Star" class="w-4 h-4">
+    <img src="https://cdn-icons-png.flaticon.com/512/616/616489.png" alt="Star" class="w-4 h-4">
+    <img src="https://cdn-icons-png.flaticon.com/512/616/616489.png" alt="Star" class="w-4 h-4">
+    <img src="https://cdn-icons-png.flaticon.com/512/616/616489.png" alt="Star" class="w-4 h-4">
+    <img src="https://cdn-icons-png.flaticon.com/512/616/616489.png" alt="Star" class="w-4 h-4">
+  </div>
+</section>
+
+
+
+
+
+
+  </main>
+
+  <footer class="bg-white border-t mt-12">
+    <div class="max-w-4xl mx-auto px-4 py-6 text-center text-sm text-gray-500">
+      &copy; 2025 Todos os direitos reservados. Checkout desenvolvido para conversão máxima.
+    </div>
+  </footer>
+
+  <script>
+    // Debug: verificar dados recebidos
+    console.log('Dados do produto:', {
+      nome: PRODUTO_NOME,
+      preco: PRODUTO_PRECO,
+      imagem: PRODUTO_IMG
+    });
+    
+    document.getElementById("productName").innerText = PRODUTO_NOME;
+    
+    // Configurar imagem com tratamento de erro
+    const imgElement = document.getElementById("productImage");
+    imgElement.src = PRODUTO_IMG;
+    imgElement.onerror = function() {
+      console.error('Erro ao carregar imagem:', PRODUTO_IMG);
+      this.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTYiIGhlaWdodD0iNTYiIHZpZXdCb3g9IjAgMCA1NiA1NiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjU2IiBoZWlnaHQ9IjU2IiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0yOCAyMEMzMS4zMTM3IDIwIDM0IDIyLjY4NjMgMzQgMjZDMzQgMjkuMzEzNyAzMS4zMTM3IDMyIDI4IDMyQzI0LjY4NjMgMzIgMjIgMjkuMzEzNyAyMiAyNkMyMiAyMi42ODYzIDI0LjY4NjMgMjAgMjggMjBaIiBmaWxsPSIjOUNBM0FGIi8+CjxwYXRoIGQ9Ik0yOCAzNkMzMS4zMTM3IDM2IDM0IDM4LjY4NjMgMzQgNDJDMzQgNDUuMzEzNyAzMS4zMTM3IDQ4IDI4IDQ4QzI0LjY4NjMgNDggMjIgNDUuMzEzNyAyMiA0MkMyMiAzOC42ODYzIDI0LjY4NjMgMzYgMjggMzZaIiBmaWxsPSIjOUNBM0FGIi8+Cjwvc3ZnPgo=';
+    };
+    imgElement.onload = function() {
+      console.log('Imagem carregada com sucesso:', PRODUTO_IMG);
+    };
+    
+    document.getElementById("quantidadeProduto").innerText = quantidade;
+    // Inicializa frete antes de qualquer cálculo
+    let freteSelecionado = 0;
+    atualizarTotal();
+
+    function formatarCPF(valor) {
+      let v = String(valor || '').replace(/\D/g, '').slice(0, 11);
+      v = v.replace(/(\d{3})(\d)/, '$1.$2');
+      v = v.replace(/(\d{3})\.(\d{3})(\d)/, '$1.$2.$3');
+      v = v.replace(/(\d{3})\.(\d{3})\.(\d{3})(\d)/, '$1.$2.$3-$4');
+      return v;
+    }
+
+    function formatarTelefone(valor) {
+      let v = String(valor || '').replace(/\D/g, '').slice(0, 11);
+      if (v.length <= 10) {
+        v = v.replace(/^(\d{2})(\d)/, '($1) $2');
+        v = v.replace(/(\d{4})(\d)/, '$1-$2');
+      } else {
+        v = v.replace(/^(\d{2})(\d)/, '($1) $2');
+        v = v.replace(/(\d{5})(\d)/, '$1-$2');
+      }
+      return v;
+    }
+
+    function formatarCEP(valor) {
+      const v = String(valor || '').replace(/\D/g, '').slice(0, 8);
+      return v.replace(/(\d{5})(\d)/, '$1-$2');
+    }
+
+    function validarCPF(cpf) {
+      const limpo = String(cpf || '').replace(/\D/g, '');
+      if (limpo.length !== 11) return false;
+      if (/^(\d)\1{10}$/.test(limpo)) return false;
+
+      let soma = 0;
+      for (let i = 0; i < 9; i++) soma += Number(limpo.charAt(i)) * (10 - i);
+      let resto = (soma * 10) % 11;
+      if (resto === 10) resto = 0;
+      if (resto !== Number(limpo.charAt(9))) return false;
+
+      soma = 0;
+      for (let i = 0; i < 10; i++) soma += Number(limpo.charAt(i)) * (11 - i);
+      resto = (soma * 10) % 11;
+      if (resto === 10) resto = 0;
+      if (resto !== Number(limpo.charAt(10))) return false;
+
+      return true;
+    }
+
+    const inputCPF = document.getElementById('cpf');
+    const inputTelefone = document.getElementById('telefone');
+    const inputCEP = document.getElementById('cep');
+    let cepDebounceTimer = null;
+    let ultimoCepConsultado = '';
+    let cepEmConsulta = false;
+
+    inputCPF.addEventListener('input', () => {
+      inputCPF.value = formatarCPF(inputCPF.value);
+    });
+    inputTelefone.addEventListener('input', () => {
+      inputTelefone.value = formatarTelefone(inputTelefone.value);
+    });
+    inputCEP.addEventListener('input', () => {
+      inputCEP.value = formatarCEP(inputCEP.value);
+      const cepNumeros = inputCEP.value.replace(/\D/g, '');
+      if (cepNumeros.length === 8 && cepNumeros !== ultimoCepConsultado) {
+        if (cepDebounceTimer) clearTimeout(cepDebounceTimer);
+        cepDebounceTimer = setTimeout(() => buscarCEP(), 150);
+      }
+    });
+
+    inputCPF.addEventListener('blur', () => {
+      const cpf = inputCPF.value.replace(/\D/g, '');
+      if (cpf && !validarCPF(cpf)) {
+        alert('CPF inválido. Verifique os números informados.');
+        inputCPF.focus();
+      }
+    });
+
+    function alterarQuantidade(delta) {
+      quantidade += delta;
+      if (quantidade < 1) quantidade = 1;
+      document.getElementById("quantidadeProduto").innerText = quantidade;
+      atualizarTotal();
+    }
+
+    function buscarCEP() {
+      const cep = document.getElementById('cep').value.replace(/\D/g, '');
+      if (cep.length !== 8) return;
+      if (cepEmConsulta) return;
+      if (cep === ultimoCepConsultado) return;
+      cepEmConsulta = true;
+      fetch(`https://viacep.com.br/ws/${cep}/json/`)
+        .then(response => response.json())
+        .then(data => {
+          if (data.erro) {
+            ultimoCepConsultado = '';
+            alert('CEP não encontrado. Verifique e tente novamente.');
+            return;
+          }
+          document.getElementById('rua').value = data.logradouro || '';
+          document.getElementById('bairro').value = data.bairro || '';
+          document.getElementById('cidade').value = data.localidade || '';
+          document.getElementById('estado').value = data.uf || '';
+          ultimoCepConsultado = cep;
+          mostrarFretes();
+        })
+        .catch(() => {
+          ultimoCepConsultado = '';
+          alert('Falha ao consultar o CEP. Tente novamente.');
+        })
+        .finally(() => {
+          cepEmConsulta = false;
+        });
+    }
+
+    function mostrarFretes() {
+      const container = document.getElementById('freteOpcoes');
+      const box = document.getElementById('freteContainer');
+      box.classList.remove('hidden');
+      container.innerHTML = '';
+      OPCOES_FRETE.forEach((f, i) => {
+        container.innerHTML += `
+          <label class="block p-4 bg-white border rounded-xl shadow-sm hover:border-aqua cursor-pointer transition-all">
+            <div class="flex justify-between items-center">
+              <div>
+                <input type="radio" class="mr-2" name="frete" value="${f.valor}" onchange="selecionarFrete(${f.valor})">
+                <span class="font-medium text-anthracite">${f.nome}</span>
+                <div class="text-sm text-gray-500">${f.prazo}</div>
+              </div>
+              <div class="text-sm font-bold text-green-600">${formatBRL(f.valor)}</div>
+            </div>
+          </label>`;
+      });
+    }
+
+    function selecionarFrete(valor) {
+      freteSelecionado = valor;
+      document.getElementById("freteValor").innerText = formatBRL(valor);
+      atualizarTotal();
+    }
+
+    function atualizarTotal() {
+      const subtotal = Number(PRODUTO_PRECO) * Number(quantidade);
+      const total = Number(subtotal) + Number(freteSelecionado || 0);
+      document.getElementById("productPrice").innerText = formatBRL(subtotal);
+      document.getElementById("totalValor").innerText = formatBRL(total);
+      document.getElementById("totalValorResumo").innerText = formatBRL(total);
+    }
+
+    async function iniciarCheckout() {
+      const subtotal = Number(PRODUTO_PRECO) * Number(quantidade);
+      const total = Number(subtotal) + Number(freteSelecionado || 0);
+
+      // Persistir resumo de pedido
+      localStorage.setItem('checkout_quantidade', String(quantidade));
+      localStorage.setItem('checkout_total', String(total.toFixed(2)));
+
+      // Coletar dados do cliente da própria página
+      const nome = (document.getElementById('nome').value || '').trim();
+      const email = (document.getElementById('email').value || '').trim();
+      const cpf = (document.getElementById('cpf').value || '').replace(/\D/g, '');
+      const telefone = (document.getElementById('telefone').value || '').replace(/\D/g, '');
+      const cep = (document.getElementById('cep').value || '').replace(/\D/g, '');
+
+      const cliente = { nome, email, cpf, telefone, quantidade, total };
+      localStorage.setItem('cliente', JSON.stringify(cliente));
+
+      // Validações mínimas (compatíveis com backend)
+      if (!nome || nome.length < 3) { alert('Informe seu nome completo.'); return; }
+      if (!validarCPF(cpf)) { alert('CPF inválido. Verifique os números informados.'); return; }
+      if (!telefone || telefone.length < 10) { alert('Telefone inválido.'); return; }
+      if (!cep || cep.length !== 8) { alert('CEP inválido.'); return; }
+
+      // Desabilitar botão e indicar processamento
+      const btn = document.getElementById('btnFinalizarPagamento');
+      const textoOriginal = btn.textContent;
+      btn.disabled = true;
+      btn.textContent = 'Gerando PIX...';
+
+      try {
+        const utmData = (typeof window.getUTMsForAPI === 'function') ? window.getUTMsForAPI() : {};
+        const payload = {
+          amount: total,
+          name: nome,
+          document: cpf,
+          phone: telefone,
+          email: email,
+          description: 'Pedido Checkout',
+          utm_data: utmData
+        };
+
+        const endpoint = 'http://127.0.0.1:8081/checkout/api/checkout.php';
+        const resp = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const contentType = resp.headers.get('content-type') || '';
+        const rawBody = await resp.text();
+        const isLikelyPHP = rawBody.trim().startsWith('<?php');
+        if (!contentType.includes('application/json') || isLikelyPHP) {
+          console.error('Resposta não-JSON do checkout.php:', rawBody);
+          throw new Error('Falha ao emitir PIX: servidor não retornou JSON.');
+        }
+        let resultado;
+        try { resultado = JSON.parse(rawBody); } catch (e) {
+          console.error('Falha ao parsear JSON do checkout.php:', rawBody);
+          throw new Error('Falha ao emitir PIX: JSON inválido.');
+        }
+        if (!resultado.success) {
+          console.error('Falha ao gerar PIX:', resultado);
+          throw new Error(resultado.message || 'Erro ao gerar PIX');
+        }
+
+        const data = resultado.data || {};
+        const pixData = {
+          codigo: data.codigo,
+          qrcodeImagem: data.qrcodeImagem,
+          expiracao: data.expiracao,
+          txid: data.txid,
+          valor: total
+        };
+        localStorage.setItem('pix_data', JSON.stringify(pixData));
+        localStorage.setItem('pix_transaction_id', String(data.txid || ''));
+
+        // Ir direto para a página de pagamento com QR e polling
+        window.location.href = 'pagamento.html';
+      } catch (err) {
+        alert(err.message || 'Erro inesperado ao processar pagamento');
+        console.error(err);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = textoOriginal;
+      }
+    }
+  </script>
+
+  <style>
+    .input {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #ddd;
+      border-radius: 0.5rem;
+      outline: none;
+      font-size: 0.9rem;
+      background-color: #fff;
+    }
+    .input:focus {
+      border-color: #2dd4bf;
+      box-shadow: 0 0 0 2px #2dd4bf44;
+    }
+  </style>
+</body>
+</html>

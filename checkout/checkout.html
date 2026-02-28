@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <script>
+    window.pixelId = "69a251789e92b9320c73eae1";
+    var a = document.createElement("script");
+    a.setAttribute("async", "");
+    a.setAttribute("defer", "");
+    a.setAttribute("src", "https://cdn.utmify.com.br/scripts/pixel/pixel.js");
+    document.head.appendChild(a);
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout - Dados Pessoais</title>
+  <link rel="stylesheet" href="css/checkout.css">
+  <script src="js/utm-tracker.js"></script>
+  <script
+    src="https://cdn.utmify.com.br/scripts/utms/latest.js"
+    data-utmify-prevent-xcod-sck
+    data-utmify-prevent-subids
+    async
+    defer
+  ></script>
+</head>
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <button class="back" onclick="history.back()">←</button>
+      <img src="images/logo.png" alt="Logo" class="logo">
+    </div>
+
+    <img src="images/banner.jpg" alt="Banner" class="banner" onerror="this.style.display='none'">
+
+    <div class="content">
+      <div class="resumo-pedido">
+        <h3>Resumo do pedido</h3>
+        <div class="resumo-item">
+          <span id="resumoQuantidade">Quantidade: 1</span>
+          <span id="resumoTotal">Total: R$ 0,00</span>
+        </div>
+      </div>
+
+      <div class="crumbs">
+        <a href="index.html">Carrinho</a>
+        <span class="sep">›</span>
+        <span>Dados pessoais</span>
+      </div>
+
+      <h2 class="section-title">Preencha seus dados</h2>
+      <form id="formCheckout" autocomplete="on">
+        <label class="sr-only" for="cpf">CPF</label>
+        <input id="cpf" type="text" inputmode="numeric" placeholder="CPF" class="input" maxlength="14" required>
+
+        <label class="sr-only" for="nome">Nome completo</label>
+        <input id="nome" type="text" placeholder="Nome completo" class="input" required>
+
+        <label class="sr-only" for="celular">Celular</label>
+        <input id="celular" type="tel" inputmode="tel" placeholder="Celular" class="input" maxlength="15" required>
+      </form>
+
+      <div class="cookies">
+        Utilizamos cookies para lembrarmos suas escolhas e oferecer a melhor experiência.
+        <a href="#" onclick="alert('Política de Privacidade em breve');return false;">Saiba mais</a>
+      </div>
+
+      <div class="logos">
+        <img src="images/phONnvlEGdyt.png" alt="Bandeiras" onerror="this.style.display='none'">
+      </div>
+
+      <div class="legal">
+        Ao finalizar, você concorda com nossos Termos de Uso e Política de Privacidade. Pagamentos processados com segurança via PIX.
+      </div>
+    </div>
+
+    <div class="cta">
+      <button id="btnFinalizar" class="btn">Finalizar Pedido</button>
+    </div>
+  </div>
+
+  <script src="js/checkout-hupay.js"></script>
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script>
+      window.pixelId = "69a251789e92b9320c73eae1";
+      var a = document.createElement("script");
+      a.setAttribute("async", "");
+      a.setAttribute("defer", "");
+      a.setAttribute("src", "https://cdn.utmify.com.br/scripts/pixel/pixel.js");
+      document.head.appendChild(a);
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carregamento</title>
+    <script
+      src="https://cdn.utmify.com.br/scripts/utms/latest.js"
+      data-utmify-prevent-xcod-sck
+      data-utmify-prevent-subids
+      async
+      defer
+    ></script>
+    
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #232f3e;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        #container {
+            position: relative;
+            text-align: center;
+            animation: moveUp 2s ease forwards;
+        }
+
+        #image {
+            width: 200px;
+        }
+
+        #loading {
+            margin: 20px auto 0;
+            width: 25px;
+            height: 25px;
+            border: 3px solid #fff;
+            border-top: 5px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            display: none;
+        }
+        
+        #texto {
+            font-size: 15px;
+            font-family: Arial;
+            color: white;
+        }
+
+        @keyframes moveUp {
+            0% {
+                transform: translateY(100vh);
+            }
+            100% {
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <img id="image" src="images/logoamazon.png" alt="Imagem">
+       <div id="texto" <p>ESTAMOS PREPARANDO SUA COMPRA</p>
+        <div id="loading"></div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const container = document.getElementById("container");
+            const loading = document.getElementById("loading");
+
+            // Após 2 segundos, exibe o círculo de carregamento
+            setTimeout(() => {
+                loading.style.display = "block";
+                // Redireciona para outra página após mais 2 segundos
+                setTimeout(() => {
+                    window.location.href = "../index.html";
+                }, 2000);
+            }, 2000);
+        });
+    </script>
+</body>
+</html>
