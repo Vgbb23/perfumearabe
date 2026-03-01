@@ -33,6 +33,23 @@ class UTMTracker {
             }
         });
 
+        // Fallback: se não veio parâmetro na URL atual, tenta recuperar do referrer.
+        if (!hasNewUTMs && document.referrer) {
+            try {
+                const refUrl = new URL(document.referrer);
+                const refParams = refUrl.searchParams;
+                this.allTrackingKeys.forEach((key) => {
+                    const value = refParams.get(key);
+                    if (value && value.trim() !== '') {
+                        currentUTMs[key] = decodeURIComponent(value.trim());
+                        hasNewUTMs = true;
+                    }
+                });
+            } catch (error) {
+                // Ignora referrer inválido e segue fluxo normal.
+            }
+        }
+
         if (hasNewUTMs) {
             currentUTMs.captured_at = new Date().toISOString();
             currentUTMs.page_captured = window.location.pathname;
