@@ -97,7 +97,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Redirecionar para confirmação
         setTimeout(() => {
-          window.location.href = 'confirmacao.html';
+          const confirmacaoUrl = (typeof window.appendTrackingParams === 'function')
+            ? window.appendTrackingParams('confirmacao.html')
+            : 'confirmacao.html';
+          window.location.href = confirmacaoUrl;
         }, 1500);
       }
     } catch (e) {

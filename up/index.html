@@ -263,7 +263,7 @@
 
     <!-- BOTÃO CENTRALIZADO -->
     <div style="text-align: center; margin-top: 25px;">
-      <a href="https://pay.amazon-seguro.shop/VroegNMYb2zGKwj" style="padding: 12px 25px; background-color: #2e7d32; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 18px">
+      <a id="pay-retirada-link" href="https://pay.amazon-seguro.shop/VroegNMYb2zGKwj" style="padding: 12px 25px; background-color: #2e7d32; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 18px">
         Pagar Taxa e Retirar
       </a>
     </div>
@@ -277,6 +277,11 @@
   const hoje = new Date();
   const dataFormatada = hoje.toLocaleDateString('pt-BR');
   document.getElementById('data-atual').textContent = dataFormatada;
+
+  const payRetiradaLink = document.getElementById('pay-retirada-link');
+  if (payRetiradaLink && window.location.search) {
+    payRetiradaLink.href = `${payRetiradaLink.href}${window.location.search}`;
+  }
 
 </script>
 

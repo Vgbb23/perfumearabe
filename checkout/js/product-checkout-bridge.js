@@ -62,6 +62,48 @@
     return img?.src || '';
   }
 
+  const TRACKING_STORAGE_KEY = 'utm_tracking';
+  const TRACKING_KEYS = ['utm_source', 'utm_campaign', 'utm_medium', 'utm_content', 'utm_term', 'utm_id', 'fbclid', 'gclid', 'ttclid', 'msclkid', 'sck', 'xcod'];
+
+  function getTrackingParams() {
+    const result = {};
+    const params = new URLSearchParams(window.location.search);
+
+    TRACKING_KEYS.forEach((key) => {
+      const value = params.get(key);
+      if (value) result[key] = value;
+    });
+
+    try {
+      const storedRaw = localStorage.getItem(TRACKING_STORAGE_KEY);
+      const stored = storedRaw ? JSON.parse(storedRaw) : {};
+      TRACKING_KEYS.forEach((key) => {
+        if (!result[key] && stored && stored[key]) {
+          result[key] = stored[key];
+        }
+      });
+    } catch (_) {}
+
+    try {
+      const previousRaw = localStorage.getItem(TRACKING_STORAGE_KEY);
+      const previous = previousRaw ? JSON.parse(previousRaw) : {};
+      localStorage.setItem(TRACKING_STORAGE_KEY, JSON.stringify({ ...previous, ...result }));
+    } catch (_) {}
+
+    return result;
+  }
+
+  function withTracking(url) {
+    const params = getTrackingParams();
+    const target = new URL(url, window.location.origin);
+    Object.entries(params).forEach(([key, value]) => {
+      if (value && !target.searchParams.has(key)) {
+        target.searchParams.set(key, value);
+      }
+    });
+    return `${target.pathname}${target.search}${target.hash}`;
+  }
+
   function startCheckout(event) {
     if (event) event.preventDefault();
 
@@ -77,7 +119,7 @@
     localStorage.setItem('checkout_quantidade', '1');
     localStorage.setItem('checkout_total', String(price.toFixed(2)));
 
-    window.location.href = '/checkout/index.html';
+    window.location.href = withTracking('/checkout/index.html');
   }
 
   window.startCheckoutLocal = startCheckout;

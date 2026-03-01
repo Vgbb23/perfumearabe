@@ -150,7 +150,10 @@ document.addEventListener('DOMContentLoaded', function() {
       localStorage.setItem('pix_data', JSON.stringify(pixData));
       localStorage.setItem('pix_transaction_id', String(data.txid || ''));
 
-      window.location.href = 'pagamento.html';
+      const pagamentoUrl = (typeof window.appendTrackingParams === 'function')
+        ? window.appendTrackingParams('pagamento.html')
+        : 'pagamento.html';
+      window.location.href = pagamentoUrl;
     } catch (err) {
       alert(err.message || 'Erro inesperado ao processar pagamento');
       console.error(err);

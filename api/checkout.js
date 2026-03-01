@@ -47,6 +47,19 @@ export default async function handler(req, res) {
     items: [{ id: productId, value: amountCents, quantity }]
   };
 
+  const incomingUtm = (body.utm_data && typeof body.utm_data === 'object') ? body.utm_data : {};
+  const utm = {};
+  const allowedUtmKeys = ['utm_source', 'utm_campaign', 'utm_medium', 'utm_content', 'utm_term', 'utm_id', 'fbclid', 'gclid', 'ttclid', 'msclkid', 'sck', 'xcod'];
+  allowedUtmKeys.forEach((key) => {
+    const value = incomingUtm[key];
+    if (typeof value === 'string' && value.trim() !== '') {
+      utm[key] = value.trim().slice(0, 255);
+    }
+  });
+  if (Object.keys(utm).length > 0) {
+    payload.utm = utm;
+  }
+
   try {
     const fruitfyResp = await fetch(`${apiUrl}/api/pix/charge`, {
       method: 'POST',

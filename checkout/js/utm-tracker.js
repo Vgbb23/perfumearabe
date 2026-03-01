@@ -5,15 +5,19 @@
 
 class UTMTracker {
     constructor() {
-        this.utmKeys = ['utm_source', 'utm_campaign', 'utm_medium', 'utm_content', 'utm_term', 'utm_id', 'fbclid'];
+        this.utmKeys = ['utm_source', 'utm_campaign', 'utm_medium', 'utm_content', 'utm_term', 'utm_id'];
+        this.clickIdKeys = ['fbclid', 'gclid', 'ttclid', 'msclkid', 'sck', 'xcod'];
+        this.allTrackingKeys = [...this.utmKeys, ...this.clickIdKeys];
         this.storageKey = 'utm_tracking';
         this.init();
     }
 
     init() {
         this.captureUTMs();
+        this.ensureURLHasStoredTracking();
+        this.decorateAllLinks();
         this.logUTMs();
-        this.setupPeriodicUpdate();
+        this.observeDOMForNewLinks();
     }
 
     captureUTMs() {
@@ -21,7 +25,7 @@ class UTMTracker {
         const currentUTMs = this.getStoredUTMs() || {};
         let hasNewUTMs = false;
 
-        this.utmKeys.forEach(key => {
+        this.allTrackingKeys.forEach(key => {
             const value = urlParams.get(key);
             if (value && value.trim() !== '') {
                 currentUTMs[key] = decodeURIComponent(value.trim());
@@ -60,12 +64,76 @@ class UTMTracker {
         if (!utms) return {};
 
         const utmPayload = {};
-        this.utmKeys.forEach(key => {
+        this.allTrackingKeys.forEach(key => {
             if (utms[key] && utms[key].trim() !== '') {
                 utmPayload[key] = utms[key].substring(0, 255);
             }
         });
         return utmPayload;
+    }
+
+    appendTrackingParamsToUrl(rawUrl) {
+        if (!rawUrl || rawUrl.startsWith('#') || rawUrl.startsWith('javascript:')) {
+            return rawUrl;
+        }
+
+        try {
+            const target = new URL(rawUrl, window.location.origin);
+            const tracking = this.getUTMsForAPI();
+
+            Object.entries(tracking).forEach(([key, value]) => {
+                if (!target.searchParams.has(key) && value) {
+                    target.searchParams.set(key, value);
+                }
+            });
+
+            if (target.origin === window.location.origin) {
+                return `${target.pathname}${target.search}${target.hash}`;
+            }
+            return target.toString();
+        } catch (error) {
+            return rawUrl;
+        }
+    }
+
+    ensureURLHasStoredTracking() {
+        const tracking = this.getUTMsForAPI();
+        if (!tracking || Object.keys(tracking).length === 0) return;
+
+        const current = new URL(window.location.href);
+        let changed = false;
+
+        Object.entries(tracking).forEach(([key, value]) => {
+            if (!current.searchParams.has(key) && value) {
+                current.searchParams.set(key, value);
+                changed = true;
+            }
+        });
+
+        if (changed) {
+            window.history.replaceState({}, '', `${current.pathname}${current.search}${current.hash}`);
+        }
+    }
+
+    decorateAllLinks() {
+        document.querySelectorAll('a[href]').forEach((anchor) => {
+            const href = anchor.getAttribute('href');
+            if (!href) return;
+            anchor.setAttribute('href', this.appendTrackingParamsToUrl(href));
+        });
+    }
+
+    observeDOMForNewLinks() {
+        if (!('MutationObserver' in window)) return;
+
+        const observer = new MutationObserver(() => {
+            this.decorateAllLinks();
+        });
+
+        observer.observe(document.documentElement, {
+            childList: true,
+            subtree: true
+        });
     }
 
     logUTMs() {
@@ -88,12 +156,6 @@ class UTMTracker {
             console.log('PÁGINA:', utms.page_captured);
         }
         console.groupEnd();
-    }
-
-    setupPeriodicUpdate() {
-        setInterval(() => {
-            this.logUTMs();
-        }, 30000);
     }
 
     clearUTMs() {
@@ -121,6 +183,11 @@ if (document.readyState === 'loading') {
 
 window.getUTMsForAPI = () => {
     return window.utmTracker ? window.utmTracker.getUTMsForAPI() : {};
+};
+
+window.appendTrackingParams = (url) => {
+    if (!window.utmTracker) return url;
+    return window.utmTracker.appendTrackingParamsToUrl(url);
 };
 
 window.clearUTMs = () => {
