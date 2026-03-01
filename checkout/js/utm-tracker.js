@@ -95,7 +95,8 @@ class UTMTracker {
         }
 
         try {
-            const target = new URL(rawUrl, window.location.origin);
+            // Usa a URL atual como base para preservar caminhos relativos (ex: checkout/pagamento.html).
+            const target = new URL(rawUrl, window.location.href);
             const tracking = this.getUTMsForAPI();
 
             Object.entries(tracking).forEach(([key, value]) => {
